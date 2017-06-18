@@ -1,8 +1,8 @@
 ﻿<Application
-    x:Class="HelloWorld.App"
+    x:Class="SieveOfEratosthenesUWP.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HelloWorld"
+    xmlns:local="using:SieveOfEratosthenesUWP"
     RequestedTheme="Light">
 
 </Application>
