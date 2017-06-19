@@ -55,8 +55,8 @@
         <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="0" x:Name="TxtMin" ValueChanged="ResetList"></input:RadNumericBox>
         <TextBlock Grid.Column="4" Grid.Row="0">Max</TextBlock>
         <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="5" Grid.Row="0" x:Name="TxtMax" ValueChanged="ResetList"></input:RadNumericBox>
-        <Button Grid.ColumnSpan="6" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" Background="Transparent" x:Name="BtnStep" Click="btnStep_Click">Step</Button>
-        <Button Grid.ColumnSpan="6" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" Background="Transparent" x:Name="BtnSolve" Click="btnSolve_Click">Solve</Button>
+        <Button Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" Background="Transparent" x:Name="BtnStep" Click="btnStep_Click">Step</Button>
+        <Button Grid.ColumnSpan="2" Grid.Column="5" Grid.Row="2" HorizontalAlignment="Stretch" Background="Transparent" x:Name="BtnSolve" Click="btnSolve_Click">Solve</Button>
         <Border Grid.Row="4" Grid.ColumnSpan="8" Grid.Column="0" Background="Black" Height="2"></Border>
         <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Grid.RowSpan="2" Grid.Row="5">Step</TextBlock>
         <Button Grid.ColumnSpan="2" Grid.Column="3" Grid.RowSpan="2" Grid.Row="5" FontFamily="Segoe UI Symbol" Background="Transparent" BorderThickness="0" Click="BtnExportStep_OnClick">&#xE105;</Button>
