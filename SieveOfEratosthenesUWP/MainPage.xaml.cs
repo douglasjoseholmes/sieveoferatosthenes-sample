@@ -29,7 +29,7 @@ namespace SieveOfEratosthenesUWP
             PageSieve = new Sieve((long)TxtMin.Value.GetValueOrDefault(2), (long)TxtMax.Value.GetValueOrDefault(2));
             DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
             DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
-            StepBox.ItemsSource = PageSieve.StepList;
+            StepBox.ItemsSource = DisplayStepList;
             PrimesBox.ItemsSource = DisplayPrimes;
         }
 
@@ -82,6 +82,7 @@ namespace SieveOfEratosthenesUWP
             DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
             StepBox.ItemsSource = DisplayStepList;
             PrimesBox.ItemsSource = DisplayPrimes;
+            PrimesBox.ScrollIntoView(DisplayPrimes.Last());
         }
 
         public class Sieve

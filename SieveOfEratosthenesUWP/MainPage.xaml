@@ -19,7 +19,7 @@
             <Setter Property="MinWidth" Value="100" />
             <Setter Property="MinHeight" Value="30"></Setter>
             <Setter Property="Minimum" Value="2" />
-            <Setter Property="Maximum" Value="9223372036854775807" />
+            <Setter Property="Maximum" Value="33554432" />
             <Setter Property="ValueFormat" Value="{}{0:N0}"></Setter>
             <Setter Property="ButtonsVisibility" Value="Collapsed"></Setter>
         </Style>
