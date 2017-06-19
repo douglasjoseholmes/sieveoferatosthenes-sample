@@ -2,34 +2,67 @@
     x:Class="SieveOfEratosthenesUWP.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SieveOfEratosthenesUWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:input="using:Telerik.UI.Xaml.Controls.Input"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="WrapWholeWords" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        <Style TargetType="input:RadNumericBox">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="AcceptsDecimalSeparator" Value="False" />
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="MinHeight" Value="30"></Setter>
+            <Setter Property="Minimum" Value="2" />
+            <Setter Property="Maximum" Value="9223372036854775807" />
+            <Setter Property="ValueFormat" Value="{}{0:N0}"></Setter>
+            <Setter Property="ButtonsVisibility" Value="Collapsed"></Setter>
+        </Style>
+        <DataTemplate x:Key="NumberOutput">
+            <StackPanel>
+                <TextBlock Text="{Binding}"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="1*" />
             <RowDefinition Height="2*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
-            <RowDefinition Height="15*" />
-
+            <RowDefinition Height="12*" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.ColumnSpan="4" Margin="10" HorizontalAlignment="Center" FontSize="20">Sieve of Eratosthenes Demonstration</TextBlock>
-        <TextBlock Grid.Column="0" Grid.Row="1" FontSize="20">Min:</TextBlock>
-        <TextBox Name="txtMin" Grid.Column="1" Grid.Row="1"></TextBox>
-        <TextBlock Grid.Column="2" Grid.Row="1" FontSize="20">Max:</TextBlock>
-        <TextBox Name="txtMax" Grid.Column="3" Grid.Row="1"></TextBox>
-        <Button Grid.ColumnSpan="4" Grid.Row="3" Name="btnSolve" Click="btnSolve_Click">Solve</Button>
-        <Line Grid.ColumnSpan="4" Grid.Row="4" StrokeThickness="5" Fill="Black"></Line>
-        <TextBlock Name="testBlock" Grid.ColumnSpan="4" Grid.Row="6" TextWrapping="Wrap"></TextBlock>
+        <TextBlock Grid.Column="1" Grid.Row="0">Min</TextBlock>
+        <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="0" x:Name="TxtMin" ValueChanged="ResetList"></input:RadNumericBox>
+        <TextBlock Grid.Column="4" Grid.Row="0">Max</TextBlock>
+        <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="5" Grid.Row="0" x:Name="TxtMax" ValueChanged="ResetList"></input:RadNumericBox>
+        <Button Grid.ColumnSpan="6" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" Background="Transparent" x:Name="BtnStep" Click="btnStep_Click">Step</Button>
+        <Button Grid.ColumnSpan="6" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" Background="Transparent" x:Name="BtnSolve" Click="btnSolve_Click">Solve</Button>
+        <Border Grid.Row="4" Grid.ColumnSpan="8" Grid.Column="0" Background="Black" Height="2"></Border>
+        <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Grid.RowSpan="2" Grid.Row="5">Step</TextBlock>
+        <Button Grid.ColumnSpan="2" Grid.Column="3" Grid.RowSpan="2" Grid.Row="5" FontFamily="Segoe UI Symbol" Background="Transparent" BorderThickness="0" Click="BtnExportStep_OnClick">&#xE105;</Button>
+        <TextBlock Grid.ColumnSpan="2" Grid.Column="4" Grid.RowSpan="2" Grid.Row="5">Primes</TextBlock>
+        <Button Grid.ColumnSpan="2" Grid.Column="6" Grid.RowSpan="2" Grid.Row="5" FontFamily="Segoe UI Symbol" Background="Transparent" BorderThickness="0" Click="BtnExportPrimes_OnClick" >&#xE105;</Button>
+        <ListBox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="7" x:Name="StepBox" ItemTemplate="{StaticResource NumberOutput}"></ListBox>
+        <ListBox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="7" x:Name="PrimesBox" ItemTemplate="{StaticResource NumberOutput}"></ListBox>
     </Grid>
 </Page>
