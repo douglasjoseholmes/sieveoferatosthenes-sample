@@ -54,30 +54,31 @@
             <RowDefinition Height="12*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Viewbox Grid.Column="0" Grid.Row="0">
+            <TextBlock Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="0" FontSize="13" HorizontalAlignment="Center">To Determine the Number of Primes in the List of Numbers, Enter the Desired Range and Click "Start".</TextBlock>
+        <Viewbox Grid.Column="0" Grid.Row="1">
             <TextBlock>Min</TextBlock>
         </Viewbox>
-        <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" x:Name="TxtMin" ValueChanged="UpdateValues" />
-        <Viewbox Grid.Column="3" Grid.Row="0">
+        <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" x:Name="TxtMin" ValueChanged="UpdateValues" />
+        <Viewbox Grid.Column="3" Grid.Row="1">
             <TextBlock>Max</TextBlock>
         </Viewbox>
-        <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Stretch" x:Name="TxtMax" ValueChanged="UpdateValues" />
-        <Viewbox Grid.Column="6" Grid.Row="0">
+        <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Stretch" x:Name="TxtMax" ValueChanged="UpdateValues" />
+        <Viewbox Grid.Column="6" Grid.Row="1">
             <Button Background="Lavender" x:Name="BtnAuto" Click="btnAuto_Click">Start</Button>
         </Viewbox>
-        <Viewbox Grid.Column="6" Grid.Row="0">
+        <Viewbox Grid.Column="6" Grid.Row="1">
             <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnStep" Click="btnStep_Click" Visibility="Collapsed">Step</Button>
         </Viewbox>
-        <ProgressBar Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="2" HorizontalAlignment="Stretch" IsIndeterminate="False" Minimum="0" Maximum="1" Visibility="Collapsed" x:Name="ProgressAuto"></ProgressBar>
+        <ProgressBar Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="2" HorizontalAlignment="Stretch" IsIndeterminate="False" Minimum="0" Maximum="1" Visibility="Collapsed" x:Name="ProgressAuto" />
         <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3">
             <Button HorizontalAlignment="Stretch" Background="Lavender" Click="btnReset_Click">Reset</Button>
         </Viewbox>
         <Viewbox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="3">
-            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnSolve" Click="btnSolve_Click">Solve</Button>
+            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnSolve" Click="btnSolve_Click">Quick Solve</Button>
         </Viewbox>
         <Border Grid.Row="4" Grid.ColumnSpan="7" Grid.Column="0" Background="Black" Height="2"></Border>
         <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Grid.RowSpan="2" Grid.Row="5">
-            <TextBlock>Unsolved</TextBlock>
+            <TextBlock>List Of Unsolved Numbers</TextBlock>
         </Viewbox>
         <Viewbox Grid.Column="3" Grid.Row="5">
             <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Bottom" BorderThickness="0" Click="BtnCopyStep_OnClick">&#xE16F;</Button>
@@ -86,7 +87,7 @@
             <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Top" BorderThickness="0" Click="BtnExportStep_OnClick">&#xE105;</Button>
         </Viewbox>
         <Viewbox Grid.ColumnSpan="2" Grid.Column="4" Grid.RowSpan="2" Grid.Row="5">
-            <TextBlock>Primes</TextBlock>
+            <TextBlock>List Of Primes</TextBlock>
         </Viewbox>
         <Viewbox Grid.Column="6" Grid.Row="5">
             <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Bottom" BorderThickness="0" Click="BtnCopyPrimes_OnClick" >&#xE16F;</Button>

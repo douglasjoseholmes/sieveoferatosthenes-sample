@@ -24,6 +24,7 @@ namespace SieveOfEratosthenesUWP
         public Sieve PageSieve;
         public ObservableCollection<long> DisplayStepList { get; set; }
         public ObservableCollection<long> DisplayPrimes { get; set; }
+        private long StartListCount { get; set; }
         private long MinInput => (long)TxtMin.Value.GetValueOrDefault(2);
         private long MaxInput => (long)TxtMax.Value.GetValueOrDefault(MinInput);
         private ThreadPoolTimer _autoTimer;
@@ -55,6 +56,7 @@ namespace SieveOfEratosthenesUWP
                 TxtMax.Minimum = MinInput;
                 DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
                 DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
+                StartListCount = 0;
                 ProgressAuto.Value = 0;
                 StepBox.ItemsSource = DisplayStepList;
                 PrimesBox.ClearValue(BackgroundProperty);
@@ -70,7 +72,7 @@ namespace SieveOfEratosthenesUWP
                 PageSieve.Step();
                 DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
                 DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
-                ProgressAuto.Value = (double) (MaxInput - MinInput - DisplayStepList.Count) / (MaxInput - MinInput);
+                ProgressAuto.Value = (double) (StartListCount - DisplayStepList.Count) / StartListCount;
                 StepBox.ItemsSource = DisplayStepList;
                 PrimesBox.ItemsSource = DisplayPrimes;
                 if (!DisplayStepList.Any() && DisplayPrimes.Any())
@@ -88,6 +90,7 @@ namespace SieveOfEratosthenesUWP
             {
                 return;
             }
+            StartListCount = DisplayStepList.Count;
             StartAuto();
         }
 
