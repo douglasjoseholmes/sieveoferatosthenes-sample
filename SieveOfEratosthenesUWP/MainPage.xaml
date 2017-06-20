@@ -54,15 +54,21 @@
             <RowDefinition Height="12*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-            <TextBlock Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="0" FontSize="13" HorizontalAlignment="Center">To Determine the Number of Primes in the List of Numbers, Enter the Desired Range and Click "Start".</TextBlock>
+        <Viewbox Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="0" >
+            <TextBlock HorizontalAlignment="Center" TextAlignment="Center">To Determine the Number of Primes in the List of Numbers, Enter the Desired Range and Click "Start".</TextBlock>
+        </Viewbox>
         <Viewbox Grid.Column="0" Grid.Row="1">
             <TextBlock>Min</TextBlock>
         </Viewbox>
-        <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" x:Name="TxtMin" ValueChanged="UpdateValues" />
+        <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1">
+        <input:RadNumericBox HorizontalAlignment="Stretch" x:Name="TxtMin" ValueChanged="UpdateValues" />
+        </Viewbox>
         <Viewbox Grid.Column="3" Grid.Row="1">
             <TextBlock>Max</TextBlock>
         </Viewbox>
-        <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Stretch" x:Name="TxtMax" ValueChanged="UpdateValues" />
+        <Viewbox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="1">
+        <input:RadNumericBox HorizontalAlignment="Stretch" x:Name="TxtMax" ValueChanged="UpdateValues" />
+        </Viewbox>
         <Viewbox Grid.Column="6" Grid.Row="1">
             <Button Background="Lavender" x:Name="BtnAuto" Click="btnAuto_Click">Start</Button>
         </Viewbox>
