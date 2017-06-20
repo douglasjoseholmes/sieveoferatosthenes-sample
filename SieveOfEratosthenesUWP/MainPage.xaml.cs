@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System.Threading;
 using Windows.UI;
@@ -37,35 +38,20 @@ namespace SieveOfEratosthenesUWP
             DisplayPrimes = new ObservableCollection<long>();
         }
 
+        #region Events
+
         private void UpdateValues(object sender, EventArgs e)
         {
             ResetList();
         }
 
-        private void btnReset_Click(object sender, RoutedEventArgs e)
+        private void BtnReset_Click(object sender, RoutedEventArgs e)
         {
             ResetList();
         }
 
-        private async void ResetList()
-        {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                EndAuto();
-                PageSieve = new Sieve(MinInput, MaxInput);
-                TxtMax.Minimum = MinInput;
-                DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
-                DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
-                StartListCount = 0;
-                ProgressAuto.Value = 0;
-                StepBox.ItemsSource = DisplayStepList;
-                PrimesBox.ClearValue(BackgroundProperty);
-                PrimesBox.ItemsSource = DisplayPrimes;
-            });
-        }
 
-
-        private async void btnStep_Click(object sender, RoutedEventArgs e)
+        private async void BtnStep_Click(object sender, RoutedEventArgs e)
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -84,7 +70,7 @@ namespace SieveOfEratosthenesUWP
             });
         }
 
-        private void btnAuto_Click(object sender, RoutedEventArgs e)
+        private void BtnAuto_Click(object sender, RoutedEventArgs e)
         {
             if (!DisplayStepList.Any())
             {
@@ -92,6 +78,63 @@ namespace SieveOfEratosthenesUWP
             }
             StartListCount = DisplayStepList.Count;
             StartAuto();
+        }
+
+        private void BtnSolve_Click(object sender, RoutedEventArgs e)
+        {
+            EndAuto();
+            DisplayStepList.Clear();
+            DisplayPrimes.Clear();
+            PageSieve.Solve();
+            DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
+            PrimesBox.ItemsSource = DisplayPrimes;
+            PrimesBox.Background = new SolidColorBrush(Colors.LightGreen);
+            UpdateTile();
+        }
+
+        private void BtnCopyStep_OnClick(object sender, RoutedEventArgs e)
+        {
+            var outStep = new DataPackage();
+            outStep.SetText(string.Join("\r\n", DisplayStepList));
+            Clipboard.SetContent(outStep);
+        }
+
+        private void BtnCopyPrimes_OnClick(object sender, RoutedEventArgs e)
+        {
+            var outPrimes = new DataPackage();
+            outPrimes.SetText(string.Join("\r\n", DisplayPrimes));
+            Clipboard.SetContent(outPrimes);
+        }
+
+        private void BtnExportStep_OnClick(object sender, RoutedEventArgs e)
+        {
+            ExportCollection(DisplayStepList);
+        }
+
+        private void BtnExportPrimes_OnClick(object sender, RoutedEventArgs e)
+        {
+            ExportCollection(DisplayPrimes);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private async void ResetList()
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                EndAuto();
+                PageSieve = new Sieve(MinInput, MaxInput);
+                TxtMax.Minimum = MinInput;
+                DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
+                DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
+                StartListCount = 0;
+                ProgressAuto.Value = 0;
+                StepBox.ItemsSource = DisplayStepList;
+                PrimesBox.ClearValue(BackgroundProperty);
+                PrimesBox.ItemsSource = DisplayPrimes;
+            });
         }
 
         private async void StartAuto()
@@ -121,25 +164,35 @@ namespace SieveOfEratosthenesUWP
             if (!DisplayStepList.Any())
             {
                 EndAuto();
-                SendToasterNotification();
+                SendToastNotification();
             }
-            btnStep_Click(null, null);
+            BtnStep_Click(null, null);
         }
 
-        private void btnSolve_Click(object sender, RoutedEventArgs e)
+        private async void ExportCollection(ObservableCollection<long> exportList)
         {
-            EndAuto();
-            DisplayStepList.Clear();
-            DisplayPrimes.Clear();
-            PageSieve.Solve();
-            DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
-            PrimesBox.ItemsSource = DisplayPrimes;
-            PrimesBox.Background = new SolidColorBrush(Colors.LightGreen);
-            UpdateTile();
+            var savePicker = new Windows.Storage.Pickers.FileSavePicker
+            {
+                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
+            };
+
+            savePicker.FileTypeChoices.Add("Plain Text File", new List<string> { ".txt" });
+
+            savePicker.SuggestedFileName = string.Format("Primes - {0} to {1}", MinInput, MaxInput);
+            var file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                Windows.Storage.CachedFileManager.DeferUpdates(file);
+
+                await Windows.Storage.FileIO.WriteTextAsync(file, string.Join("\r\n", exportList));
+
+                await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
+            }
         }
 
-        private void SendToasterNotification()
+        private void SendToastNotification()
         {
+            var exportList = string.Join(",", DisplayPrimes);
             var toastContent = new ToastContent
             {
                 Visual = new ToastVisual
@@ -159,11 +212,25 @@ namespace SieveOfEratosthenesUWP
                                 Text = "# Of Primes: " + DisplayPrimes.Count
                             }
 
+                        },
+                        AppLogoOverride = new ToastGenericAppLogo
+                        {
+                            Source = "Assets/Square44x44Logo.targetsize-24_altform-unplated.png",
+                            HintCrop = ToastGenericAppLogoCrop.Default
                         }
+                    }
+                },
+                Actions = new ToastActionsCustom
+                {
+                    Buttons =
+                    {
+                        new ToastButton("Copy", "copy:" + exportList),
+                        new ToastButton("Save", "save:" + MinInput + ":" + MaxInput + ":" + exportList)
                     }
                 }
             };
             var toast = new ToastNotification(toastContent.GetXml());
+            toast.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(15);
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
 
@@ -238,50 +305,7 @@ namespace SieveOfEratosthenesUWP
             }
         }
 
+        #endregion
 
-        private void BtnCopyStep_OnClick(object sender, RoutedEventArgs e)
-        {
-            var outStep = new DataPackage();
-            outStep.SetText(string.Join("\r\n", DisplayStepList));
-            Clipboard.SetContent(outStep);
-        }
-
-        private void BtnCopyPrimes_OnClick(object sender, RoutedEventArgs e)
-        {
-            var outPrimes = new DataPackage();
-            outPrimes.SetText(string.Join("\r\n", DisplayPrimes));
-            Clipboard.SetContent(outPrimes);
-        }
-
-        private void BtnExportStep_OnClick(object sender, RoutedEventArgs e)
-        {
-            ExportCollection(DisplayStepList);
-        }
-
-        private void BtnExportPrimes_OnClick(object sender, RoutedEventArgs e)
-        {
-            ExportCollection(DisplayPrimes);
-        }
-
-        private async void ExportCollection(ObservableCollection<long> exportList)
-        {
-            var savePicker = new Windows.Storage.Pickers.FileSavePicker
-            {
-                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
-            };
-
-            savePicker.FileTypeChoices.Add("Plain Text File", new List<string> { ".txt" });
-
-            savePicker.SuggestedFileName = string.Format("Primes - {0} to {1}", MinInput, MaxInput);
-            var file = await savePicker.PickSaveFileAsync();
-            if (file != null)
-            {
-                Windows.Storage.CachedFileManager.DeferUpdates(file);
-
-                await Windows.Storage.FileIO.WriteTextAsync(file, string.Join("\r\n", exportList));
-
-                await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
-            }
-        }
     }
 }

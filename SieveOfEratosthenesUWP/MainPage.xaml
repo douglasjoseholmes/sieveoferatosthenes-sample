@@ -70,17 +70,17 @@
         <input:RadNumericBox HorizontalAlignment="Stretch" x:Name="TxtMax" ValueChanged="UpdateValues" />
         </Viewbox>
         <Viewbox Grid.Column="6" Grid.Row="1">
-            <Button Background="Lavender" x:Name="BtnAuto" Click="btnAuto_Click">Start</Button>
+            <Button Background="Lavender" x:Name="BtnAuto" Click="BtnAuto_Click">Start</Button>
         </Viewbox>
         <Viewbox Grid.Column="6" Grid.Row="1">
-            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnStep" Click="btnStep_Click" Visibility="Collapsed">Step</Button>
+            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnStep" Click="BtnStep_Click" Visibility="Collapsed">Step</Button>
         </Viewbox>
         <ProgressBar Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="2" HorizontalAlignment="Stretch" IsIndeterminate="False" Minimum="0" Maximum="1" Visibility="Collapsed" x:Name="ProgressAuto" />
         <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3">
-            <Button HorizontalAlignment="Stretch" Background="Lavender" Click="btnReset_Click">Reset</Button>
+            <Button HorizontalAlignment="Stretch" Background="Lavender" Click="BtnReset_Click">Reset</Button>
         </Viewbox>
         <Viewbox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="3">
-            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnSolve" Click="btnSolve_Click">Quick Solve</Button>
+            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnSolve" Click="BtnSolve_Click">Quick Solve</Button>
         </Viewbox>
         <Border Grid.Row="4" Grid.ColumnSpan="7" Grid.Column="0" Background="Black" Height="2"></Border>
         <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Grid.RowSpan="2" Grid.Row="5">

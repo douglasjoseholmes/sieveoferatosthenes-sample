@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -61,6 +64,60 @@ namespace SieveOfEratosthenesUWP
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+        }
+
+        protected override void OnActivated(IActivatedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            // TODO: Initialize root frame just like in OnLaunched
+
+            if (e is ToastNotificationActivatedEventArgs)
+            {
+                var toastActivationArgs = e as ToastNotificationActivatedEventArgs;
+                var args = toastActivationArgs.Argument.Split(':');
+                switch (args[0])
+                {
+                    case "copy":
+                        var outPrimes = new DataPackage();
+                        outPrimes.SetText(args[1].Replace(",", "\r\n"));
+                        Clipboard.SetContent(outPrimes);
+                        break;
+
+
+                    // Open the conversation
+                    case "save":
+                        SaveFile(args);
+                        break;
+                }
+                if (rootFrame.BackStack.Count == 0)
+                    rootFrame.BackStack.Add(new PageStackEntry(typeof(MainPage), null, null));
+            }
+
+            // TODO: Handle other types of activation
+            Window.Current.Activate();
+        }
+
+        public async Task SaveFile(string[] args)
+        {
+            var savePicker = new Windows.Storage.Pickers.FileSavePicker
+            {
+                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
+            };
+
+            savePicker.FileTypeChoices.Add("Plain Text File", new List<string> { ".txt" });
+
+            savePicker.SuggestedFileName = string.Format("Primes - {0} to {1}", args[1], args[2]);
+            var file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                Windows.Storage.CachedFileManager.DeferUpdates(file);
+
+                await Windows.Storage.FileIO.WriteTextAsync(file, args[3].Replace(",", "\r\n"));
+
+                await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
+            }
+
         }
 
         /// <summary>
