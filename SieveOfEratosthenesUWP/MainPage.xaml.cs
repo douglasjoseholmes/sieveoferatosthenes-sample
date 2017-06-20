@@ -212,11 +212,6 @@ namespace SieveOfEratosthenesUWP
                                 Text = "# Of Primes: " + DisplayPrimes.Count
                             }
 
-                        },
-                        AppLogoOverride = new ToastGenericAppLogo
-                        {
-                            Source = "Assets/Square44x44Logo.targetsize-24_altform-unplated.png",
-                            HintCrop = ToastGenericAppLogoCrop.Default
                         }
                     }
                 },
