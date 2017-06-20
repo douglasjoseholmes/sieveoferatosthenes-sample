@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
+using Windows.UI.Notifications;
+using Windows.UI.StartScreen;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -16,6 +20,9 @@ namespace SieveOfEratosthenesUWP
         public Sieve PageSieve;
         public ObservableCollection<long> DisplayStepList { get; set; }
         public ObservableCollection<long> DisplayPrimes { get; set; }
+        private long MinInput => (long)TxtMin.Value.GetValueOrDefault(2);
+        private long MaxInput => (long)TxtMax.Value.GetValueOrDefault(MinInput);
+
         public MainPage()
         {
             InitializeComponent();
@@ -26,54 +33,13 @@ namespace SieveOfEratosthenesUWP
 
         private void ResetList(object sender, EventArgs e)
         {
-            PageSieve = new Sieve((long)TxtMin.Value.GetValueOrDefault(2), (long)TxtMax.Value.GetValueOrDefault(2));
+            PageSieve = new Sieve(MinInput, MaxInput);
             DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
             DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
             StepBox.ItemsSource = DisplayStepList;
             PrimesBox.ItemsSource = DisplayPrimes;
         }
 
-        private void btnSolve_Click(object sender, RoutedEventArgs e)
-        {
-            DisplayStepList.Clear();
-            DisplayPrimes.Clear();
-            PageSieve.Solve();
-            DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
-            PrimesBox.ItemsSource = DisplayPrimes;
-        }
-
-        private void BtnExportPrimes_OnClick(object sender, RoutedEventArgs e)
-        {
-            ExportCollection(DisplayPrimes);
-        }
-
-        private void BtnExportStep_OnClick(object sender, RoutedEventArgs e)
-        {
-            ExportCollection(DisplayStepList);
-        }
-
-        private async void ExportCollection(ObservableCollection<long> exportList)
-        {
-            var savePicker = new Windows.Storage.Pickers.FileSavePicker
-            {
-                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
-            };
-            // Dropdown of file types the user can save the file as
-            savePicker.FileTypeChoices.Add("Comma Separated Values", new List<string> { ".csv" });
-            // Default file name if the user does not type one in or select a file to replace
-            savePicker.SuggestedFileName = "New Document";
-            var file = await savePicker.PickSaveFileAsync();
-            if (file != null)
-            {
-                Windows.Storage.CachedFileManager.DeferUpdates(file);
-                // write to file
-                await Windows.Storage.FileIO.WriteTextAsync(file, string.Join(",", exportList));
-                // Let Windows know that we're finished changing the file so
-                // the other app can update the remote version of the file.
-                // Completing updates may require Windows to ask for user input.
-                await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
-            }
-        }
 
         private void btnStep_Click(object sender, RoutedEventArgs e)
         {
@@ -83,107 +49,133 @@ namespace SieveOfEratosthenesUWP
             StepBox.ItemsSource = DisplayStepList;
             PrimesBox.ItemsSource = DisplayPrimes;
             PrimesBox.ScrollIntoView(DisplayPrimes.Last());
+            SendNotification();
         }
 
-        public class Sieve
+        private void btnSolve_Click(object sender, RoutedEventArgs e)
         {
-            public long Minimum { get; set; }
-            public long Maximum { get; set; }
-            public HashSet<long> StepList { get; set; }
-            public HashSet<long> Primes { get; set; }
+            DisplayStepList.Clear();
+            DisplayPrimes.Clear();
+            PageSieve.Solve();
+            DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
+            PrimesBox.ItemsSource = DisplayPrimes;
+            SendNotification();
+        }
 
-            public Sieve()
+        private void SendNotification()
+        {
+            var generalNotification = new TileBindingContentAdaptive
             {
-
-                Minimum = 2;
-                Maximum = 2;
-                StepList = new HashSet<long> { 2 };
-                Primes = new HashSet<long>();
-            }
-
-            public Sieve(long max)
-            {
-                Minimum = 2;
-                Maximum = max;
-                StepList = new HashSet<long>();
-                Primes = new HashSet<long>();
-                SolveForBase();
-            }
-
-            public Sieve(long min, long max)
-            {
-                Minimum = min;
-                Maximum = max;
-                StepList = new HashSet<long>();
-                Primes = new HashSet<long>();
-                SolveForBase();
-            }
-
-            public void Step()
-            {
-                if (!StepList.Any())
+                Children =
                 {
-                    return;
-                }
-                var localMinimum = StepList.First();
-                Primes.Add(localMinimum);
-                StepList.Remove(localMinimum);
-                for (long y = localMinimum * 2; y <= Maximum; y = y + localMinimum)
-                {
-
-                    if (StepList.Contains(y))
+                    new AdaptiveText
                     {
-                        StepList.Remove(y);
-                    }
+                        Text = "Min: " + MinInput,
+                        HintStyle = AdaptiveTextStyle.Caption
+                    },
 
-                }
-            }
-
-            private void SolveForBase()
-            {
-                for (long x = 2; x <= Maximum; x++)
-                {
-                    StepList.Add(x);
-                }
-                for (long x = 2; x < Minimum; x++)
-                {
-                    StepList.Remove(x);
-                    for (long y = x * 2; y <= Maximum; y = y + x)
+                    new AdaptiveText
                     {
+                        Text = "Max: " + MaxInput,
+                        HintStyle = AdaptiveTextStyle.Caption
+                    },
 
-                        if (StepList.Contains(y))
-                        {
-                            StepList.Remove(y);
-                        }
+                    new AdaptiveText
+                    {
+                        Text = DisplayStepList.Any() ? "Unsolved" : "Primes",
+                        HintStyle = AdaptiveTextStyle.Caption
+                    },
+
+                    new AdaptiveText
+                    {
+                        Text = DisplayStepList.Any()
+                            ? DisplayStepList.Count.ToString()
+                            : DisplayPrimes.Count.ToString(),
+                        HintStyle = AdaptiveTextStyle.CaptionSubtle
+                    },
+                }
+            };
+
+            TileContent content = new TileContent
+            {
+                Visual = new TileVisual
+                {
+                    TileSmall = new TileBinding
+                    {
+                        Content = generalNotification
+                    },
+                    TileMedium = new TileBinding
+                    {
+                        Content = generalNotification
+                    },
+                    TileWide = new TileBinding
+                    {
+                        Content = generalNotification
+                    },
+                    TileLarge = new TileBinding
+                    {
+                        Content = generalNotification
                     }
                 }
-            }
-
-            public void Solve()
+            };
+            var notification = new TileNotification(content.GetXml())
             {
-                Primes.Clear();
-                HashSet<long> composite = new HashSet<long>();
-                for (long x = 2; x <= Maximum; x++)
-                {
-                    for (long y = x * 2; y <= Maximum; y = y + x)
-                    {
+                ExpirationTime = DateTimeOffset.UtcNow.AddMinutes(1),
+            };
+            TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
+            if (SecondaryTile.Exists("MySecondaryTile"))
+            {
+                // Get its updater
+                var updater = TileUpdateManager.CreateTileUpdaterForSecondaryTile("MySecondaryTile");
 
-                        if (!composite.Contains(y))
-                        {
-                            composite.Add(y);
-                        }
+                // And send the notification
+                updater.Update(notification);
+            }
+        }
 
-                    }
 
-                }
+        private void BtnCopyStep_OnClick(object sender, RoutedEventArgs e)
+        {
+            var outStep = new DataPackage();
+            outStep.SetText(string.Join("\r\n", DisplayStepList));
+            Clipboard.SetContent(outStep);
+        }
 
-                for (long z = Minimum; z <= Maximum; z++)
-                {
-                    if (!composite.Contains(z))
-                    {
-                        Primes.Add(z);
-                    }
-                }
+        private void BtnCopyPrimes_OnClick(object sender, RoutedEventArgs e)
+        {
+            var outPrimes = new DataPackage();
+            outPrimes.SetText(string.Join("\r\n", DisplayPrimes));
+            Clipboard.SetContent(outPrimes);
+        }
+
+        private void BtnExportStep_OnClick(object sender, RoutedEventArgs e)
+        {
+            ExportCollection(DisplayStepList);
+        }
+
+        private void BtnExportPrimes_OnClick(object sender, RoutedEventArgs e)
+        {
+            ExportCollection(DisplayPrimes);
+        }
+
+        private async void ExportCollection(ObservableCollection<long> exportList)
+        {
+            var savePicker = new Windows.Storage.Pickers.FileSavePicker
+            {
+                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
+            };
+
+            savePicker.FileTypeChoices.Add("Comma Separated Values", new List<string> { ".csv" });
+
+            savePicker.SuggestedFileName = "New Document";
+            var file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                Windows.Storage.CachedFileManager.DeferUpdates(file);
+
+                await Windows.Storage.FileIO.WriteTextAsync(file, string.Join("\r\n", exportList));
+
+                await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
             }
         }
     }
