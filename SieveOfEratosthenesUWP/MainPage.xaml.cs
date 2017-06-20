@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.System.Threading;
+using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
+using Windows.UI.Xaml.Media;
 using Microsoft.Toolkit.Uwp.Notifications;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -22,6 +26,7 @@ namespace SieveOfEratosthenesUWP
         public ObservableCollection<long> DisplayPrimes { get; set; }
         private long MinInput => (long)TxtMin.Value.GetValueOrDefault(2);
         private long MaxInput => (long)TxtMax.Value.GetValueOrDefault(MinInput);
+        private ThreadPoolTimer _autoTimer;
 
         public MainPage()
         {
@@ -31,38 +36,129 @@ namespace SieveOfEratosthenesUWP
             DisplayPrimes = new ObservableCollection<long>();
         }
 
-        private void ResetList(object sender, EventArgs e)
+        private void UpdateValues(object sender, EventArgs e)
         {
-            PageSieve = new Sieve(MinInput, MaxInput);
-            DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
-            DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
-            StepBox.ItemsSource = DisplayStepList;
-            PrimesBox.ItemsSource = DisplayPrimes;
+            ResetList();
+        }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            ResetList();
+        }
+
+        private async void ResetList()
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                EndAuto();
+                PageSieve = new Sieve(MinInput, MaxInput);
+                TxtMax.Minimum = MinInput;
+                DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
+                DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
+                StepBox.ItemsSource = DisplayStepList;
+                PrimesBox.ClearValue(BackgroundProperty);
+                PrimesBox.ItemsSource = DisplayPrimes;
+            });
         }
 
 
-        private void btnStep_Click(object sender, RoutedEventArgs e)
+        private async void btnStep_Click(object sender, RoutedEventArgs e)
         {
-            PageSieve.Step();
-            DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
-            DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
-            StepBox.ItemsSource = DisplayStepList;
-            PrimesBox.ItemsSource = DisplayPrimes;
-            PrimesBox.ScrollIntoView(DisplayPrimes.Last());
-            SendNotification();
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                PageSieve.Step();
+                DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
+                DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
+                StepBox.ItemsSource = DisplayStepList;
+                PrimesBox.ItemsSource = DisplayPrimes;
+                if (!DisplayStepList.Any() && DisplayPrimes.Any())
+                {
+                    PrimesBox.Background = new SolidColorBrush(Colors.LightGreen);
+                }
+                PrimesBox.ScrollIntoView(DisplayPrimes.Last());
+                UpdateTile();
+            });
+        }
+
+        private void btnAuto_Click(object sender, RoutedEventArgs e)
+        {
+            if (!DisplayStepList.Any())
+            {
+                return;
+            }
+            StartAuto();
+        }
+
+        private async void StartAuto()
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                BtnAuto.IsEnabled = false;
+                _autoTimer = ThreadPoolTimer.CreatePeriodicTimer(autoTimer_Tick, TimeSpan.FromSeconds(1));
+            });
+        }
+
+        private async void EndAuto()
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                BtnAuto.IsEnabled = true;
+                _autoTimer?.Cancel();
+            });
+        }
+
+        private void autoTimer_Tick(ThreadPoolTimer sender)
+        {
+            if (!DisplayStepList.Any())
+            {
+                EndAuto();
+                SendToasterNotification();
+            }
+            btnStep_Click(null, null);
         }
 
         private void btnSolve_Click(object sender, RoutedEventArgs e)
         {
+            EndAuto();
             DisplayStepList.Clear();
             DisplayPrimes.Clear();
             PageSieve.Solve();
             DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
             PrimesBox.ItemsSource = DisplayPrimes;
-            SendNotification();
+            PrimesBox.Background = new SolidColorBrush(Colors.LightGreen);
+            UpdateTile();
         }
 
-        private void SendNotification()
+        private void SendToasterNotification()
+        {
+            var toastContent = new ToastContent
+            {
+                Visual = new ToastVisual
+                {
+                    BindingGeneric = new ToastBindingGeneric
+                    {
+                        Children =
+                        {
+                            new AdaptiveText
+                            {
+                                Text = string.Format("{0} to {1}", MinInput, MaxInput),
+                                HintMaxLines = 1
+                            },
+
+                            new AdaptiveText
+                            {
+                                Text = "# Of Primes: " + DisplayPrimes.Count
+                            }
+
+                        }
+                    }
+                }
+            };
+            var toast = new ToastNotification(toastContent.GetXml());
+            ToastNotificationManager.CreateToastNotifier().Show(toast);
+        }
+
+        private void UpdateTile()
         {
             var generalNotification = new TileBindingContentAdaptive
             {
@@ -165,9 +261,9 @@ namespace SieveOfEratosthenesUWP
                 SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
             };
 
-            savePicker.FileTypeChoices.Add("Comma Separated Values", new List<string> { ".csv" });
+            savePicker.FileTypeChoices.Add("Plain Text File", new List<string> { ".txt" });
 
-            savePicker.SuggestedFileName = "New Document";
+            savePicker.SuggestedFileName = string.Format("Primes - {0} to {1}", MinInput, MaxInput);
             var file = await savePicker.PickSaveFileAsync();
             if (file != null)
             {

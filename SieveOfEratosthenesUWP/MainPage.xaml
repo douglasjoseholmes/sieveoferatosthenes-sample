@@ -21,21 +21,20 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="AcceptsDecimalSeparator" Value="False" />
             <Setter Property="MinWidth" Value="100" />
-            <Setter Property="MinHeight" Value="30"></Setter>
+            <Setter Property="MinHeight" Value="30" />
             <Setter Property="Minimum" Value="2" />
             <Setter Property="Maximum" Value="33554432" />
-            <Setter Property="ValueFormat" Value="{}{0:N0}"></Setter>
-            <Setter Property="ButtonsVisibility" Value="Collapsed"></Setter>
+            <Setter Property="ValueFormat" Value="{}{0:N0}" />
+            <Setter Property="ButtonsVisibility" Value="Collapsed" />
         </Style>
         <DataTemplate x:Key="NumberOutput">
             <StackPanel>
-                <TextBlock Text="{Binding}"></TextBlock>
+                <TextBlock Text="{Binding}" />
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1*" />
@@ -55,44 +54,46 @@
             <RowDefinition Height="12*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Viewbox Grid.Column="1" Grid.Row="0">
+        <Viewbox Grid.Column="0" Grid.Row="0">
             <TextBlock>Min</TextBlock>
         </Viewbox>
-        <Viewbox Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="0">
-            <input:RadNumericBox x:Name="TxtMin" ValueChanged="ResetList"></input:RadNumericBox>
-            </Viewbox>
-        <Viewbox  Grid.Column="4" Grid.Row="0">
+        <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" x:Name="TxtMin" ValueChanged="UpdateValues" />
+        <Viewbox  Grid.Column="3" Grid.Row="0">
             <TextBlock>Max</TextBlock>
-            </Viewbox>
-        <Viewbox Grid.ColumnSpan="2" Grid.Column="5" Grid.Row="0">
-            <input:RadNumericBox x:Name="TxtMax" ValueChanged="ResetList"></input:RadNumericBox>
         </Viewbox>
-        <Viewbox Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="2">
-        <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnStep" Click="btnStep_Click">Step</Button>
+        <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Stretch" x:Name="TxtMax" ValueChanged="UpdateValues" />
+        <Viewbox Grid.Column="6" Grid.Row="0" HorizontalAlignment="Stretch">
+            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnAuto" Click="btnAuto_Click">Start</Button>
         </Viewbox>
-        <Viewbox Grid.ColumnSpan="2" Grid.Column="5" Grid.Row="2">
-        <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnSolve" Click="btnSolve_Click">Solve</Button>
+        <Viewbox Grid.Column="1" Grid.Row="1">
+            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnStep" Click="btnStep_Click">Step</Button>
+        </Viewbox>
+        <Viewbox Grid.Column="3" Grid.Row="1">
+            <Button HorizontalAlignment="Stretch" Background="Lavender" Click="btnReset_Click">Reset</Button>
+        </Viewbox>
+        <Viewbox Grid.Column="5" Grid.Row="1">
+            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnSolve" Click="btnSolve_Click">Solve</Button>
         </Viewbox>
         <Border Grid.Row="4" Grid.ColumnSpan="8" Grid.Column="0" Background="Black" Height="2"></Border>
-        <Viewbox Grid.ColumnSpan="2" Grid.Column="2" Grid.RowSpan="2" Grid.Row="5">
-        <TextBlock>Unsolved</TextBlock>
+        <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Grid.RowSpan="2" Grid.Row="5">
+            <TextBlock>Unsolved</TextBlock>
         </Viewbox>
-        <Viewbox Grid.Column="4" Grid.Row="5">
-        <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Bottom" BorderThickness="0" Click="BtnCopyStep_OnClick">&#xE16F;</Button>
+        <Viewbox Grid.Column="3" Grid.Row="5">
+            <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Bottom" BorderThickness="0" Click="BtnCopyStep_OnClick">&#xE16F;</Button>
         </Viewbox>
-        <Viewbox Grid.Column="4" Grid.Row="6">
-        <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Top" BorderThickness="0" Click="BtnExportStep_OnClick">&#xE105;</Button>
+        <Viewbox Grid.Column="3" Grid.Row="6">
+            <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Top" BorderThickness="0" Click="BtnExportStep_OnClick">&#xE105;</Button>
         </Viewbox>
-        <Viewbox Grid.ColumnSpan="2" Grid.Column="5" Grid.RowSpan="2" Grid.Row="5"> 
-        <TextBlock>Primes</TextBlock>
+        <Viewbox Grid.ColumnSpan="2" Grid.Column="4" Grid.RowSpan="2" Grid.Row="5">
+            <TextBlock>Primes</TextBlock>
         </Viewbox>
-        <Viewbox Grid.Column="7" Grid.Row="5">
-        <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Bottom" BorderThickness="0" Click="BtnCopyPrimes_OnClick" >&#xE16F;</Button>
+        <Viewbox Grid.Column="6" Grid.Row="5">
+            <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Bottom" BorderThickness="0" Click="BtnCopyPrimes_OnClick" >&#xE16F;</Button>
         </Viewbox>
-        <Viewbox Grid.Column="7" Grid.Row="6">
-        <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Top" BorderThickness="0" Click="BtnExportPrimes_OnClick" >&#xE105;</Button>
+        <Viewbox Grid.Column="6" Grid.Row="6">
+            <Button FontFamily="Segoe UI Symbol" Background="Transparent" FontStretch="Undefined" VerticalAlignment="Top" BorderThickness="0" Click="BtnExportPrimes_OnClick" >&#xE105;</Button>
         </Viewbox>
-        <ListBox Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="7" x:Name="StepBox" ItemTemplate="{StaticResource NumberOutput}"></ListBox>
-        <ListBox Grid.ColumnSpan="2" Grid.Column="5" Grid.Row="7" x:Name="PrimesBox" ItemTemplate="{StaticResource NumberOutput}"></ListBox>
+        <ListBox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="7" x:Name="StepBox" ItemTemplate="{StaticResource NumberOutput}"></ListBox>
+        <ListBox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="7" x:Name="PrimesBox" ItemTemplate="{StaticResource NumberOutput}"></ListBox>
     </Grid>
 </Page>
