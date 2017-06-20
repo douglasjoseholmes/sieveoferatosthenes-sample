@@ -58,23 +58,24 @@
             <TextBlock>Min</TextBlock>
         </Viewbox>
         <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" x:Name="TxtMin" ValueChanged="UpdateValues" />
-        <Viewbox  Grid.Column="3" Grid.Row="0">
+        <Viewbox Grid.Column="3" Grid.Row="0">
             <TextBlock>Max</TextBlock>
         </Viewbox>
         <input:RadNumericBox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Stretch" x:Name="TxtMax" ValueChanged="UpdateValues" />
-        <Viewbox Grid.Column="6" Grid.Row="0" HorizontalAlignment="Stretch">
-            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnAuto" Click="btnAuto_Click">Start</Button>
+        <Viewbox Grid.Column="6" Grid.Row="0">
+            <Button Background="Lavender" x:Name="BtnAuto" Click="btnAuto_Click">Start</Button>
         </Viewbox>
-        <Viewbox Grid.Column="1" Grid.Row="1">
-            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnStep" Click="btnStep_Click">Step</Button>
+        <Viewbox Grid.Column="6" Grid.Row="0">
+            <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnStep" Click="btnStep_Click" Visibility="Collapsed">Step</Button>
         </Viewbox>
-        <Viewbox Grid.Column="3" Grid.Row="1">
+        <ProgressBar Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="2" HorizontalAlignment="Stretch" IsIndeterminate="False" Minimum="0" Maximum="1" Visibility="Collapsed" x:Name="ProgressAuto"></ProgressBar>
+        <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3">
             <Button HorizontalAlignment="Stretch" Background="Lavender" Click="btnReset_Click">Reset</Button>
         </Viewbox>
-        <Viewbox Grid.Column="5" Grid.Row="1">
+        <Viewbox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="3">
             <Button HorizontalAlignment="Stretch" Background="Lavender" x:Name="BtnSolve" Click="btnSolve_Click">Solve</Button>
         </Viewbox>
-        <Border Grid.Row="4" Grid.ColumnSpan="8" Grid.Column="0" Background="Black" Height="2"></Border>
+        <Border Grid.Row="4" Grid.ColumnSpan="7" Grid.Column="0" Background="Black" Height="2"></Border>
         <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Grid.RowSpan="2" Grid.Row="5">
             <TextBlock>Unsolved</TextBlock>
         </Viewbox>

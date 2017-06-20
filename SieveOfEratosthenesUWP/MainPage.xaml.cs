@@ -55,6 +55,7 @@ namespace SieveOfEratosthenesUWP
                 TxtMax.Minimum = MinInput;
                 DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
                 DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
+                ProgressAuto.Value = 0;
                 StepBox.ItemsSource = DisplayStepList;
                 PrimesBox.ClearValue(BackgroundProperty);
                 PrimesBox.ItemsSource = DisplayPrimes;
@@ -69,6 +70,7 @@ namespace SieveOfEratosthenesUWP
                 PageSieve.Step();
                 DisplayStepList = new ObservableCollection<long>(PageSieve.StepList);
                 DisplayPrimes = new ObservableCollection<long>(PageSieve.Primes);
+                ProgressAuto.Value = (double) (MaxInput - MinInput - DisplayStepList.Count) / (MaxInput - MinInput);
                 StepBox.ItemsSource = DisplayStepList;
                 PrimesBox.ItemsSource = DisplayPrimes;
                 if (!DisplayStepList.Any() && DisplayPrimes.Any())
@@ -93,7 +95,9 @@ namespace SieveOfEratosthenesUWP
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                BtnAuto.IsEnabled = false;
+                BtnStep.Visibility = Visibility.Visible;
+                BtnAuto.Visibility = Visibility.Collapsed;
+                ProgressAuto.Visibility = Visibility.Visible;
                 _autoTimer = ThreadPoolTimer.CreatePeriodicTimer(autoTimer_Tick, TimeSpan.FromSeconds(1));
             });
         }
@@ -102,7 +106,9 @@ namespace SieveOfEratosthenesUWP
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                BtnAuto.IsEnabled = true;
+                BtnStep.Visibility = Visibility.Collapsed;
+                BtnAuto.Visibility = Visibility.Visible;
+                ProgressAuto.Visibility = Visibility.Collapsed;
                 _autoTimer?.Cancel();
             });
         }
