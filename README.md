@@ -26,7 +26,26 @@ Otherwise:
 * Follow any instructions provided by the prompt that appears, if necessary
 * Once it indicates the app has been installed successfully, you should find the application in your Windows menu.
 
+## Uninstall
+
+You can uninstall the app by finding the app in your start menu, right clicking it, and selecting "Uninstall".
+
 ## Usage
+
+* Click on the "Sieve Of Eratosthenes - UWP" tile to execute the application.
+* As the instructions indicate, enter the range for which you which to see the sieve generate tiles in the "Min" and "Max" input fields, respectively.
+* "Min" should never go below 2.
+* "Max" should never go below "Min", or 2 if min is not specified.
+* "Start" will start a timer that executes a step of the algorithm every 1 second.
+* "Start" will be replaced by "Step" after it's clicked, you can use this to speed up the algorithm if you want.
+* "Reset" will take all the primes generated, move them to the left, and stop the timer.
+* "Quick Solve" lets the algorithm run at full speed, which should generate primes instantaneously, but there is no Toast notification generated for Quick Solve.
+* While the algorithm is running (not with Quick Solve) the "Primes" list box should always scroll down to the last prime generated.
+* There is a "Copy to Clipboard" button for the unresolved list and the primes list, and an "Export" button below it which will use the range specified.
+* If "Min" or "Max" are left empty they default to 2 if Min, or whatever Min's value is if Max.
+* There are LiveTile updates, so if you drag the app into the "Tiles" section of your start menu and click "Start", it will provide updates on the progress of the algorithm.
+* The Toast Notification on completion of the algorithm should allow you to copy or save primes, just like in the app.
+
 
 ## Built With
 
