@@ -60,10 +60,6 @@ You can uninstall the app by finding the app in your start menu, right clicking 
 
 At the moment this repository is private to prevent additional review from outside sources.
 
-## Versioning
-
-The current version is the initial release build (1.0.0.0).
-
 ## Authors
 
 * **Douglas Jose Holmes** - [Repository located here](https://github.com/douglasjoseholmes/)
