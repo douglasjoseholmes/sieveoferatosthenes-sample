@@ -12,6 +12,7 @@ This project was constructed in Windows 10 through Microsoft Visual Studio 2017.
 
 ### Installing
 
+* Make sure your instance of Windows 10 is enabled for development. Details can be found [here](https://docs.microsoft.com/en-us/windows/uwp/get-started/enable-your-device-for-development)
 * Clone the full contents of your repository to a readable/writable area of your computer.
 
 If using Visual Studio 2017 or later:
