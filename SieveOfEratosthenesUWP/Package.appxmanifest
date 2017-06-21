@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="a044abd3-5292-44b3-9df4-fb55acf50747" Publisher="CN=naengwen" Version="1.0.0.0" />
+  <Identity Name="a044abd3-5292-44b3-9df4-fb55acf50747" Publisher="CN=naengwen" Version="1.0.1.0" />
   <mp:PhoneIdentity PhoneProductId="a044abd3-5292-44b3-9df4-fb55acf50747" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Sieve of Eratosthenes - UWP</DisplayName>

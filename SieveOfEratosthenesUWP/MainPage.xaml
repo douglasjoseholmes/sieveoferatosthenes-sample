@@ -58,13 +58,13 @@
             <TextBlock HorizontalAlignment="Center" TextAlignment="Center">To Determine the Number of Primes in the List of Numbers, Enter the Desired Range and Click "Start".</TextBlock>
         </Viewbox>
         <Viewbox Grid.Column="0" Grid.Row="1">
-            <TextBlock>Min</TextBlock>
+            <TextBlock>Start From</TextBlock>
         </Viewbox>
         <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1">
         <input:RadNumericBox HorizontalAlignment="Stretch" x:Name="TxtMin" ValueChanged="UpdateValues" />
         </Viewbox>
         <Viewbox Grid.Column="3" Grid.Row="1">
-            <TextBlock>Max</TextBlock>
+            <TextBlock>Maximum</TextBlock>
         </Viewbox>
         <Viewbox Grid.ColumnSpan="2" Grid.Column="4" Grid.Row="1">
         <input:RadNumericBox HorizontalAlignment="Stretch" x:Name="TxtMax" ValueChanged="UpdateValues" />
